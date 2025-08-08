@@ -10,10 +10,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ideasprojects.cesar_londono_20250807.presentation.login.state.LoginState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(onBackClicked: () -> Unit = {}) {
+fun LoginScreen(
+    state: LoginState = LoginState(),
+    onLogin: (String, String) -> Unit = { _, _ -> },
+    onBackClicked: () -> Unit = {}
+) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -29,31 +34,46 @@ fun LoginScreen(onBackClicked: () -> Unit = {}) {
             )
         }
     ) { paddingValues ->
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues) // Aplicar el padding del Scaffold
-                .padding(16.dp), // Padding adicional para el contenido
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(paddingValues)
         ) {
-            OutlinedTextField(
-                value = username,
-                onValueChange = { username = it },
-                label = { Text("Usuario") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
-                label = { Text("Contraseña") },
-                visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = { /* No action */ }, modifier = Modifier.fillMaxWidth()) {
-                Text(text = "Ingresar")
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                OutlinedTextField(
+                    value = username,
+                    onValueChange = { username = it },
+                    label = { Text("Usuario") },
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = !state.isLoading
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    label = { Text("Contraseña") },
+                    visualTransformation = PasswordVisualTransformation(),
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = !state.isLoading
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = { onLogin(username, password) },
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = !state.isLoading
+                ) {
+                    Text(text = "Ingresar")
+                }
+            }
+
+            if (state.isLoading) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
         }
     }
