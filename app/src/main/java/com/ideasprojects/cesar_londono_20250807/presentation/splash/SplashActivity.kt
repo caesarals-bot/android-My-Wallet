@@ -25,6 +25,7 @@ class SplashActivity : ComponentActivity() {
             LaunchedEffect(isLoggedIn) {
                 // Esperamos a que isLoggedIn tenga un valor (no sea null)
                 if (isLoggedIn != null) {
+                    delay(3000) // Añadimos el retraso de 3 segundos
                     val destination = if (isLoggedIn == true) {
                         MainActivity::class.java
                     } else {

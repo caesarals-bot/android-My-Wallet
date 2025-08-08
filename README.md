@@ -1,46 +1,91 @@
-# My Wallet - Aplicación de Billetera Virtual Bitcoin
+# My Wallet - Rastreador de Precios de Bitcoin
 
-Este documento describe los requisitos y la arquitectura para la aplicación "My Wallet", una billetera virtual enfocada en Bitcoin.
+**My Wallet** es una aplicación moderna para Android, desarrollada en Kotlin, que permite a los usuarios seguir el valor diario del Bitcoin. La aplicación cuenta con una interfaz de usuario limpia y amigable, gestión segura de sesiones y obtención de datos en tiempo real desde una API pública.
 
-## Requisitos Funcionales
+**Creado por:** César Londoño
 
-1.  **Pantalla de Bienvenida (SplashScreen)**:
-    *   La aplicación debe iniciar con una pantalla de bienvenida (SplashScreen) alusiva a los indicadores económicos o a la billetera virtual.
+---
 
-2.  **Autenticación de Usuario**:
-    *   Debe contar con una pantalla de login con campos para usuario y contraseña.
-    *   Tras un inicio de sesión exitoso, las pantallas posteriores deben mostrar el mensaje "Bienvenido: <USUARIO>", obteniendo el nombre de usuario desde las preferencias.
+## 📸 Screenshots
 
-3.  **Persistencia de Sesión**:
-    *   Si un usuario ya ha iniciado sesión y cierra la aplicación, no se le deben solicitar las credenciales nuevamente al volver a abrirla.
+*Nota: Para añadir las capturas, crea una carpeta `screenshots` en la raíz del proyecto y guarda las imágenes con los nombres correspondientes.*
 
-4.  **Cierre de Sesión**:
-    *   La aplicación debe contar con un botón que permita al usuario cerrar su sesión.
+| SplashScreen | HomeScreen | LoginScreen | MainScreen |
+| :----------: | :----------: | :-----------: | :----------: |
+| ![SplashScreen](screenshots/splash.png) | ![HomeScreen](screenshots/home.png) | ![LoginScreen](screenshots/login.png) | ![MainScreen](screenshots/main.png) |
 
-5.  **Visualización de Datos de Bitcoin**:
-    *   Obtener los valores de bitcoin desde la API pública: `https://mindicador.cl/api/bitcoin`.
-    *   La llamada a la API debe realizarse de forma asíncrona (utilizando hilos, corutinas o AsyncTask).
-    *   Los datos obtenidos deben ser deserializados y mostrados en un formato de lista.
+---
 
-## Arquitectura Sugerida: MVVM + Repository
+## ✨ Características Principales
 
-Se utilizará el patrón de arquitectura Model-View-ViewModel (MVVM) con un Repositorio para separar las responsabilidades y facilitar el mantenimiento y la escalabilidad de la aplicación.
+- **Pantalla de Bienvenida Atractiva**: Una `SplashScreen` animada que mejora la experiencia inicial del usuario.
+- **Login de Usuario**: Sistema de inicio de sesión simple (`usuario: admin`, `clave: 1234`).
+- **Sesión Persistente**: La aplicación recuerda tu sesión gracias a `DataStore`. No es necesario iniciar sesión cada vez que abres la app.
+- **Valor de Bitcoin en la Pantalla de Inicio**: La pantalla `Home` muestra el valor más reciente del Bitcoin para captar el interés del usuario antes de iniciar sesión.
+- **Historial de Valores de Bitcoin**: Tras iniciar sesión, los usuarios pueden ver una lista con los valores históricos del Bitcoin, actualizados diariamente.
+- **Funcionalidad de Cierre de Sesión**: Los usuarios pueden cerrar sesión de forma segura, borrando los datos de su sesión del dispositivo.
+- **UI Moderna y Reactiva**: Construida 100% con Jetpack Compose, siguiendo los principios de Material Design 3.
 
-### Componentes Clave
+---
 
-*   **View (Vistas)**:
-    *   `SplashScreenActivity`: Pantalla de carga inicial.
-    *   `LoginActivity`: Pantalla para el inicio de sesión del usuario.
-    *   `MainActivity`: Pantalla principal que muestra el mensaje de bienvenida y la lista con los valores de Bitcoin.
+## 🏗️ Arquitectura y Estructura del Proyecto
 
-*   **ViewModel (VM)**:
-    *   Orquesta la lógica de la interfaz de usuario (UI).
-    *   Expone el estado de la UI y los datos (como la información del usuario y los valores de Bitcoin) a las Vistas a través de `LiveData` o `StateFlow`.
+Este proyecto sigue los principios de **Clean Architecture** y el patrón de diseño **MVVM (Model-View-ViewModel)**. La estructura del código está organizada para maximizar la separación de responsabilidades, la testeabilidad y la mantenibilidad.
 
-*   **Repository (Repositorio)**:
-    *   Encapsula y gestiona las fuentes de datos, proveyendo una API de datos limpia al resto de la aplicación.
-    *   Decide si obtener los datos desde una fuente remota o local.
+```
+/app/src/main/java/com/ideasprojects/cesar_londono_20250807
+├── data
+│   ├── remote
+│   │   └── MindicadorApiService.kt  # Interfaz de Retrofit para la API
+│   └── repository
+│       ├── BitcoinRepository.kt     # Repositorio para los datos de Bitcoin
+│       └── UserPreferencesRepository.kt # Repositorio para DataStore
+├── domain
+│   └── model
+│       └── BitcoinModels.kt         # Data classes que representan los datos
+└── presentation
+    ├── home
+    │   ├── HomeActivity.kt, HomeScreen.kt, HomeViewModel.kt, state/HomeState.kt
+    ├── login
+    │   ├── LoginActivity.kt, LoginScreen.kt, LoginViewModel.kt, state/LoginState.kt
+    ├── main
+    │   ├── MainActivity.kt, MainScreen.kt, MainViewModel.kt, state/MainState.kt
+    └── splash
+        └── SplashActivity.kt, SplashScreen.kt, SplashViewModel.kt
+```
 
-*   **Data Sources (Fuentes de Datos)**:
-    *   **Remote**: Realiza la llamada HTTP a la API `https://mindicador.cl/api/bitcoin` para obtener los datos actualizados de Bitcoin.
-    *   **Local**: Gestiona la persistencia de la sesión del usuario (estado de login y nombre de usuario) utilizando `SharedPreferences` o, preferiblemente para nuevos desarrollos, `DataStore`.
+- **`data`**: Capa de datos. Su responsabilidad es ser la única fuente de verdad para los datos de la aplicación. Contiene las implementaciones de los repositorios y las fuentes de datos (API remota, base de datos local, etc.).
+- **`domain`**: Capa de dominio. Contiene la lógica de negocio y los modelos de datos principales de la aplicación. Es una capa pura de Kotlin, independiente de Android.
+- **`presentation`**: Capa de presentación. Contiene toda la lógica relacionada con la UI (Vistas y ViewModels). Se comunica con la capa de dominio para mostrar datos y reaccionar a las interacciones del usuario.
+
+---
+
+## 🛠️ Tecnologías y Librerías Utilizadas
+
+- **Lenguaje**: [Kotlin](https://kotlinlang.org/)
+- **UI Toolkit**: [Jetpack Compose](https://developer.android.com/jetpack/compose)
+- **Asincronía**: [Kotlin Coroutines](https://kotlinlang.org/docs/coroutines-overview.html)
+- **Peticiones de Red**: [Retrofit 2](https://square.github.io/retrofit/)
+- **(De)serialización de JSON**: [Gson](https://github.com/google/gson)
+- **Persistencia Local**: [Jetpack DataStore](https://developer.android.com/topic/libraries/architecture/datastore)
+- **Componentes de Arquitectura de Android**: `ViewModel`, `StateFlow`.
+
+---
+
+## 🔌 API de Referencia
+
+Los datos del valor del Bitcoin se obtienen de la API pública [Mindicador.cl](https://mindicador.cl/api/bitcoin).
+
+---
+
+## 🚀 Cómo Empezar
+
+1.  Clona el repositorio:
+    ```bash
+    git clone https://github.com/tu-usuario/cesar_londono_20250807.git
+    ```
+2.  Abre el proyecto en Android Studio.
+3.  Sincroniza las dependencias de Gradle.
+4.  Ejecuta la aplicación en un emulador o dispositivo físico.
+
+¡Y listo para usar!

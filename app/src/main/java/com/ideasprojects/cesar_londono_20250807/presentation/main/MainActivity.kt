@@ -17,9 +17,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val username by viewModel.username.collectAsState()
+            val state by viewModel.state.collectAsState()
 
             MainScreen(
                 username = username,
+                state = state,
                 onLogout = {
                     viewModel.onLogout()
                     val intent = Intent(this, HomeActivity::class.java).apply {
