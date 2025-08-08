@@ -10,9 +10,7 @@
 
 *Nota: Para añadir las capturas, crea una carpeta `screenshots` en la raíz del proyecto y guarda las imágenes con los nombres correspondientes.*
 
-| SplashScreen | HomeScreen | LoginScreen | MainScreen |
-| :----------: | :----------: | :-----------: | :----------: |
-| ![SplashScreen](screenshots/splash.png) | ![HomeScreen](screenshots/home.png) | ![LoginScreen](screenshots/login.png) | ![MainScreen](screenshots/main.png) |
+
 
 ---
 
@@ -82,7 +80,7 @@ Los datos del valor del Bitcoin se obtienen de la API pública [Mindicador.cl](h
 
 1.  Clona el repositorio:
     ```bash
-    git clone https://github.com/tu-usuario/cesar_londono_20250807.git
+    git clone https://github.com/caesarals-bot/android-My-Wallet
     ```
 2.  Abre el proyecto en Android Studio.
 3.  Sincroniza las dependencias de Gradle.
