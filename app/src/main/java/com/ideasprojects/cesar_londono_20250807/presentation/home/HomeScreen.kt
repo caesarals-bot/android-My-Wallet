@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(onLoginClicked: () -> Unit = {}) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -34,7 +34,7 @@ fun HomeScreen() {
             style = MaterialTheme.typography.headlineMedium
         )
         Spacer(modifier = Modifier.height(32.dp))
-        Button(onClick = { /* No action */ }, modifier = Modifier.fillMaxWidth()) {
+        Button(onClick = onLoginClicked, modifier = Modifier.fillMaxWidth()) {
             Text(text = "Iniciar Sesión")
         }
         Spacer(modifier = Modifier.height(8.dp))
